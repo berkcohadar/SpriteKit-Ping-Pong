@@ -8,19 +8,105 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate{
     var player1: SKSpriteNode!
     var player2: SKSpriteNode!
-    var pong:    SKSpriteNode!
+    var gameBall: SKShapeNode!
+    var player1Label: SKLabelNode!
+    var player2Label: SKLabelNode!
+    
+    var initialLocation = CGPoint(x: 0, y: 0)
+    
+    var player1ScoreInt: Int = 0; // player1Score score value as int
+    var player2ScoreInt: Int = 0; // player2Score score value as int
     
     override func didMove(to view: SKView) {
-        pong = (self.childNode(withName: "pong") as! SKSpriteNode)
         player1 = (self.childNode(withName: "player1") as! SKSpriteNode)
         player2 = (self.childNode(withName: "player2") as! SKSpriteNode)
+        player1Label = (self.childNode(withName: "player1ScoreLabel") as! SKLabelNode)
+        player2Label = (self.childNode(withName: "player2ScoreLabel") as! SKLabelNode)
         
-        pong.physicsBody?.applyImpulse(CGVector(dx: 50, dy: 50))
+        gameBall = SKShapeNode(circleOfRadius: CGFloat(20))
+        gameBall.fillColor = .red
+        gameBall.position = initialLocation
+        gameBall.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(20))
+        gameBall.physicsBody!.affectedByGravity = false
+        gameBall.physicsBody?.collisionBitMask = 1
+        gameBall.physicsBody?.categoryBitMask = 2
+        gameBall.physicsBody?.angularDamping = 0
+        gameBall.physicsBody?.linearDamping = 0
+        gameBall.physicsBody?.friction = 0
+        gameBall.physicsBody?.restitution = 1
+        gameBall.physicsBody?.allowsRotation = true
+        gameBall.physicsBody?.isDynamic = true
+        gameBall.name = "gameBall"
+        self.addChild(gameBall)
+        
         let border = SKPhysicsBody(edgeLoopFrom: (view.scene?.frame)!)
         border.friction = 0
         self.physicsBody = border
+        self.physicsBody?.contactTestBitMask = 2
+        
+        gameBall.physicsBody?.applyImpulse(CGVector(dx: 50, dy: 50))
+        
+        self.physicsWorld.contactDelegate = self
+        self.name = "gameArea"
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for touch in touches {
+            let loc = touch.location(in: self)
+            if (loc.x < 0) {
+                player1.position.y = loc.y
+            }
+            else {
+                player2.position.y = loc.y
+            }
+            
+        }
+    }
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for touch in touches {
+            let loc = touch.location(in: self)
+            if (loc.x < 0) {
+                player1.position.y = loc.y
+            }
+            else {
+                player2.position.y = loc.y
+            }
+        }
+    }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        let firstContact = contact.bodyA.node?.name
+        let secondContact = contact.bodyB.node?.name
+        
+        if (firstContact == "gameBall" && secondContact == "gameArea" || firstContact == "gameArea" && secondContact == "gameBall") {
+            if (gameBall.position.x < player1.position.x) {
+                print("GOAL - PLAYER2")
+                player2ScoreInt += 1
+                player2Label.text = String(player2ScoreInt)
+                resetBall(player:"PLAYER2")
+            }
+            if (gameBall.position.x > player2.position.x) {
+                print("GOAL - PLAYER1")
+                player1ScoreInt += 1
+                player1Label.text = String(player1ScoreInt)
+                resetBall(player:"PLAYER2")
+            }
+        }
+
+    }
+    
+    func resetBall(player:String){
+        print("RESET")
+        gameBall.removeFromParent()
+        gameBall.position = initialLocation
+        self.addChild(gameBall)
+        gameBall.physicsBody?.applyImpulse(CGVector(dx: 50, dy: 50))
+    }
+    
+    func startTimer(){
+        return
     }
 }
