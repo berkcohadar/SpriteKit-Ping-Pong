@@ -20,6 +20,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     var player1ScoreInt: Int = 0; // player1Score score value as int
     var player2ScoreInt: Int = 0; // player2Score score value as int
     
+    var timer = Timer()
+    var time = 2
     override func didMove(to view: SKView) {
         player1 = (self.childNode(withName: "player1") as! SKSpriteNode)
         player2 = (self.childNode(withName: "player2") as! SKSpriteNode)
@@ -84,26 +86,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         if (firstContact == "gameBall" && secondContact == "gameArea" || firstContact == "gameArea" && secondContact == "gameBall") {
             if (gameBall.position.x < player1.position.x) {
                 print("GOAL - PLAYER2")
+                gameBall.removeFromParent()
                 player2ScoreInt += 1
                 player2Label.text = String(player2ScoreInt)
-                resetBall(player:"PLAYER2")
+                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: nil, repeats: true)
+               
             }
             if (gameBall.position.x > player2.position.x) {
                 print("GOAL - PLAYER1")
+                gameBall.removeFromParent()
                 player1ScoreInt += 1
                 player1Label.text = String(player1ScoreInt)
-                resetBall(player:"PLAYER2")
+                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: nil, repeats: true)
             }
         }
 
     }
     
-    func resetBall(player:String){
-        print("RESET")
-        gameBall.removeFromParent()
-        gameBall.position = initialLocation
-        self.addChild(gameBall)
-        gameBall.physicsBody?.applyImpulse(CGVector(dx: 50, dy: 50))
+    @objc func resetBall(){
+        time = time - 1
+        if (time == 0){
+            print("RESET")
+            gameBall.position = initialLocation
+            self.addChild(gameBall)
+            gameBall.physicsBody?.applyImpulse(CGVector(dx: 50, dy: 50))
+            timer.invalidate()
+            time = 2
+        }
     }
     
     func startTimer(){
