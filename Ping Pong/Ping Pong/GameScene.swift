@@ -37,10 +37,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         gameBall.physicsBody?.categoryBitMask = 2
         gameBall.physicsBody?.angularDamping = 0
         gameBall.physicsBody?.linearDamping = 0
-        gameBall.physicsBody?.friction = 0
+        gameBall.physicsBody?.friction = 1
         gameBall.physicsBody?.restitution = 1
         gameBall.physicsBody?.allowsRotation = true
         gameBall.physicsBody?.isDynamic = true
+        gameBall.zRotation = CGFloat.pi / 2
         gameBall.name = "gameBall"
         self.addChild(gameBall)
         
@@ -49,7 +50,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         self.physicsBody = border
         self.physicsBody?.contactTestBitMask = 2
         
-        gameBall.physicsBody?.applyImpulse(CGVector(dx: 50, dy: 50))
+        gameBall.physicsBody?.applyImpulse(CGVector(dx: 100, dy: 100))
         
         self.physicsWorld.contactDelegate = self
         self.name = "gameArea"
@@ -100,7 +101,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: nil, repeats: true)
             }
         }
-
     }
     
     @objc func resetBall(){
@@ -108,14 +108,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         if (time == 0){
             print("RESET")
             gameBall.position = initialLocation
+            gameBall.zRotation = CGFloat.pi / 2
             self.addChild(gameBall)
-            gameBall.physicsBody?.applyImpulse(CGVector(dx: 50, dy: 50))
+            gameBall.physicsBody?.applyImpulse(CGVector(dx: 100, dy: 100))
             timer.invalidate()
             time = 2
         }
     }
     
-    func startTimer(){
-        return
-    }
 }
