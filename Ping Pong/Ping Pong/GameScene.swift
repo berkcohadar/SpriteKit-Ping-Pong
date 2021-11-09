@@ -24,6 +24,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     
     var timer = Timer()
     var time = 2
+    
+    var targetScore = 10
     override func didMove(to view: SKView) {
         //player1 = (self.childNode(withName: "player1") as! SKSpriteNode)
         //player2 = (self.childNode(withName: "player2") as! SKSpriteNode)
@@ -34,10 +36,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         initLocationP2 = CGPoint(x: (self.size.width/2)/3 * 2.5, y: 0)
         
         
-        player1 = SKShapeNode(circleOfRadius: CGFloat(100))
+        player1 = SKShapeNode(circleOfRadius: CGFloat(90))
         player1.position = initLocationP1
         player1.fillColor = .systemGreen
-        player1.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(100))
+        player1.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(90))
         player1.physicsBody!.affectedByGravity = false
         player1.physicsBody?.isDynamic = false
         player1.physicsBody?.collisionBitMask = 2
@@ -49,10 +51,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player1.name = "player11"
         self.addChild(player1)
         
-        player2 = SKShapeNode(circleOfRadius: CGFloat(100))
+        player2 = SKShapeNode(circleOfRadius: CGFloat(90))
         player2.position = initLocationP2
         player2.fillColor = .systemPink
-        player2.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(100))
+        player2.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(90))
         player2.physicsBody!.affectedByGravity = false
         player2.physicsBody?.isDynamic = false
         player2.physicsBody?.collisionBitMask = 2
@@ -134,15 +136,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 gameBall.removeFromParent()
                 player2ScoreInt += 1
                 player2Label.text = String(player2ScoreInt)
-                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: nil, repeats: true)
-               
+                if (player2ScoreInt == targetScore){
+                    endGame(player: "player2")
+                } else {
+                    timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: nil, repeats: true)
+                }
             }
             if (gameBall.position.x > player2.position.x) {
                 print("GOAL - PLAYER1")
                 gameBall.removeFromParent()
                 player1ScoreInt += 1
                 player1Label.text = String(player1ScoreInt)
-                timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: nil, repeats: true)
+                if (player1ScoreInt == targetScore){
+                    endGame(player: "player1")
+                } else {
+                    timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: nil, repeats: true)
+                }
             }
         }
     }
@@ -160,6 +169,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             
             timer.invalidate()
             time = 2
+        }
+    }
+    
+    @objc func endGame(player:String){
+        gameBall.position = initLocationBall
+        self.addChild(gameBall)
+        
+        player1.position = initLocationP1
+        player2.position = initLocationP2
+        
+        player1ScoreInt = 0
+        player1Label.text = String(player1ScoreInt)
+        
+        player2ScoreInt = 0
+        player2Label.text = String(player2ScoreInt)
+        if (player == "player1"){
+            print("player1 won")
+        } else if (player == "player2"){
+            print("player2 won")
         }
     }
     
