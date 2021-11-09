@@ -26,11 +26,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     var time = 2
     
     var targetScore = 10
+    var winnerLabel: SKLabelNode!
     override func didMove(to view: SKView) {
         //player1 = (self.childNode(withName: "player1") as! SKSpriteNode)
         //player2 = (self.childNode(withName: "player2") as! SKSpriteNode)
         player1Label = (self.childNode(withName: "player1ScoreLabel") as! SKLabelNode)
         player2Label = (self.childNode(withName: "player2ScoreLabel") as! SKLabelNode)
+
+        winnerLabel = (self.childNode(withName: "winnerLabel") as! SKLabelNode)
         
         initLocationP1 = CGPoint(x: (self.size.width/2)/3 * -2.5, y: 0)
         initLocationP2 = CGPoint(x: (self.size.width/2)/3 * 2.5, y: 0)
@@ -49,7 +52,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player1.physicsBody?.friction = 0
         player1.physicsBody?.restitution = 1
         player1.name = "player11"
-        self.addChild(player1)
         
         player2 = SKShapeNode(circleOfRadius: CGFloat(90))
         player2.position = initLocationP2
@@ -64,7 +66,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player2.physicsBody?.friction = 0
         player2.physicsBody?.restitution = 1
         player2.name = "player22"
-        self.addChild(player2)
         
         gameBall = SKShapeNode(circleOfRadius: CGFloat(30))
         gameBall.fillColor = .red
@@ -81,17 +82,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         gameBall.physicsBody?.isDynamic = true
         gameBall.zRotation = CGFloat.pi / 2
         gameBall.name = "gameBall"
-        self.addChild(gameBall)
         
         let border = SKPhysicsBody(edgeLoopFrom: (view.scene?.frame)!)
         border.friction = 0
         self.physicsBody = border
         self.physicsBody?.contactTestBitMask = 2
-        
-        gameBall.physicsBody?.applyImpulse(CGVector(dx: 250, dy: 0))
-        
         self.physicsWorld.contactDelegate = self
         self.name = "gameArea"
+        
+        self.addChild(player1)
+        self.addChild(player2)
+        self.addChild(gameBall)
+        gameBall.physicsBody?.applyImpulse(CGVector(dx: 250, dy: 0))
+        
+
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -131,7 +135,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         let secondContact = contact.bodyB.node?.name
         
         if (firstContact == "gameBall" && secondContact == "gameArea" || firstContact == "gameArea" && secondContact == "gameBall") {
-            if (gameBall.position.x < player1.position.x) {
+            if (gameBall.position.x < initLocationP1.x) {
                 print("GOAL - PLAYER2")
                 gameBall.removeFromParent()
                 player2ScoreInt += 1
@@ -142,7 +146,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                     timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: nil, repeats: true)
                 }
             }
-            if (gameBall.position.x > player2.position.x) {
+            if (gameBall.position.x > initLocationP2.x) {
                 print("GOAL - PLAYER1")
                 gameBall.removeFromParent()
                 player1ScoreInt += 1
@@ -173,8 +177,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     }
     
     @objc func endGame(player:String){
-        gameBall.position = initLocationBall
-        self.addChild(gameBall)
         
         player1.position = initLocationP1
         player2.position = initLocationP2
@@ -186,8 +188,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player2Label.text = String(player2ScoreInt)
         if (player == "player1"){
             print("player1 won")
+            winnerLabel.position = CGPoint(x: 0, y: 0)
+            winnerLabel.text = "player1 won"
         } else if (player == "player2"){
             print("player2 won")
+            winnerLabel.position = CGPoint(x: 0, y: 0)
+            winnerLabel.text = "player2 won"
         }
     }
     
