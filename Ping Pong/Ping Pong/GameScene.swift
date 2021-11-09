@@ -15,7 +15,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     var player1Label: SKLabelNode!
     var player2Label: SKLabelNode!
     
-    var initialLocation = CGPoint(x: 0, y: 0)
+    var initLocationBall = CGPoint(x: 0, y: 0)
+    var initLocationP1 = CGPoint(x: 0, y: 0)
+    var initLocationP2 = CGPoint(x: 0, y: 0)
     
     var player1ScoreInt: Int = 0; // player1Score score value as int
     var player2ScoreInt: Int = 0; // player2Score score value as int
@@ -28,9 +30,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player1Label = (self.childNode(withName: "player1ScoreLabel") as! SKLabelNode)
         player2Label = (self.childNode(withName: "player2ScoreLabel") as! SKLabelNode)
         
+        initLocationP1 = player1.position
+        initLocationP2 = player2.position
+        
         gameBall = SKShapeNode(circleOfRadius: CGFloat(30))
         gameBall.fillColor = .red
-        gameBall.position = initialLocation
+        gameBall.position = initLocationBall
         gameBall.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(30))
         gameBall.physicsBody!.affectedByGravity = false
         gameBall.physicsBody?.collisionBitMask = 1
@@ -115,7 +120,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         time = time - 1
         if (time == 0){
             print("RESET")
-            gameBall.position = initialLocation
+            gameBall.position = initLocationBall
+            player1.position = initLocationP1
+            player2.position = initLocationP2
             gameBall.zRotation = CGFloat.pi / 2
             self.addChild(gameBall)
             gameBall.physicsBody?.applyImpulse(CGVector(dx: 250, dy: 0))
