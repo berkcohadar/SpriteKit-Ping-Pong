@@ -28,8 +28,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     var targetScore = 10
     var winnerLabel: SKLabelNode!
     override func didMove(to view: SKView) {
-        //player1 = (self.childNode(withName: "player1") as! SKSpriteNode)
-        //player2 = (self.childNode(withName: "player2") as! SKSpriteNode)
         player1Label = (self.childNode(withName: "player1ScoreLabel") as! SKLabelNode)
         player2Label = (self.childNode(withName: "player2ScoreLabel") as! SKLabelNode)
 
@@ -37,7 +35,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         
         initLocationP1 = CGPoint(x: (self.size.width/2)/3 * -2.5, y: 0)
         initLocationP2 = CGPoint(x: (self.size.width/2)/3 * 2.5, y: 0)
-        
         
         player1 = SKShapeNode(circleOfRadius: CGFloat(120))
         player1.position = initLocationP1
@@ -94,8 +91,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         self.addChild(player2)
         self.addChild(gameBall)
         gameBall.physicsBody?.applyImpulse(CGVector(dx: 600, dy: 0))
-        
-
     }
     
 
@@ -108,7 +103,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 if(loc.x <= radius * -1) {
                     player1.position.x = loc.x
                 }
-                
             }
             else {
                 player2.position.y = loc.y
@@ -135,6 +129,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                     timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: ["player":"player2"], repeats: true)
                 }
             }
+            
             if (gameBall.position.x > initLocationP2.x) {
                 print("GOAL - PLAYER1")
                 gameBall.removeFromParent()
@@ -157,6 +152,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             print("RESET")
             gameBall.position = initLocationBall
             self.addChild(gameBall)
+            
             if (player == "player1") {
                 gameBall.physicsBody?.applyImpulse(CGVector(dx: 600, dy: 0))
             } else {
@@ -172,7 +168,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     }
     
     @objc func endGame(player:String){
-        
         player1.position = initLocationP1
         player2.position = initLocationP2
         
@@ -181,6 +176,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         
         player2ScoreInt = 0
         player2Label.text = String(player2ScoreInt)
+        
         if (player == "player1"){
             print("player1 won")
             winnerLabel.position = CGPoint(x: 0, y: 0)
