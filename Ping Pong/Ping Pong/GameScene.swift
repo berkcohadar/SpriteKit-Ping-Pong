@@ -9,8 +9,8 @@ import SpriteKit
 import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate{
-    var player1: SKSpriteNode!
-    var player2: SKSpriteNode!
+    var player1: SKShapeNode!
+    var player2: SKShapeNode!
     var gameBall: SKShapeNode!
     var player1Label: SKLabelNode!
     var player2Label: SKLabelNode!
@@ -25,13 +25,44 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     var timer = Timer()
     var time = 2
     override func didMove(to view: SKView) {
-        player1 = (self.childNode(withName: "player1") as! SKSpriteNode)
-        player2 = (self.childNode(withName: "player2") as! SKSpriteNode)
+        //player1 = (self.childNode(withName: "player1") as! SKSpriteNode)
+        //player2 = (self.childNode(withName: "player2") as! SKSpriteNode)
         player1Label = (self.childNode(withName: "player1ScoreLabel") as! SKLabelNode)
         player2Label = (self.childNode(withName: "player2ScoreLabel") as! SKLabelNode)
         
-        initLocationP1 = player1.position
-        initLocationP2 = player2.position
+        initLocationP1 = CGPoint(x: (self.size.width/2)/3 * -2.5, y: 0)
+        initLocationP2 = CGPoint(x: (self.size.width/2)/3 * 2.5, y: 0)
+        
+        
+        player1 = SKShapeNode(circleOfRadius: CGFloat(100))
+        player1.position = initLocationP1
+        player1.fillColor = .systemGreen
+        player1.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(100))
+        player1.physicsBody!.affectedByGravity = false
+        player1.physicsBody?.isDynamic = false
+        player1.physicsBody?.collisionBitMask = 2
+        player1.physicsBody?.categoryBitMask = 1
+        player1.physicsBody?.angularDamping = 0
+        player1.physicsBody?.linearDamping = 0
+        player1.physicsBody?.friction = 0
+        player1.physicsBody?.restitution = 1
+        player1.name = "player11"
+        self.addChild(player1)
+        
+        player2 = SKShapeNode(circleOfRadius: CGFloat(100))
+        player2.position = initLocationP2
+        player2.fillColor = .systemPink
+        player2.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(100))
+        player2.physicsBody!.affectedByGravity = false
+        player2.physicsBody?.isDynamic = false
+        player2.physicsBody?.collisionBitMask = 2
+        player2.physicsBody?.categoryBitMask = 1
+        player2.physicsBody?.angularDamping = 0
+        player2.physicsBody?.linearDamping = 0
+        player2.physicsBody?.friction = 0
+        player2.physicsBody?.restitution = 1
+        player2.name = "player22"
+        self.addChild(player2)
         
         gameBall = SKShapeNode(circleOfRadius: CGFloat(30))
         gameBall.fillColor = .red
@@ -121,11 +152,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         if (time == 0){
             print("RESET")
             gameBall.position = initLocationBall
-            player1.position = initLocationP1
-            player2.position = initLocationP2
-            gameBall.zRotation = CGFloat.pi / 2
             self.addChild(gameBall)
             gameBall.physicsBody?.applyImpulse(CGVector(dx: 250, dy: 0))
+            
+            player1.position = initLocationP1
+            player2.position = initLocationP2
+            
             timer.invalidate()
             time = 2
         }
