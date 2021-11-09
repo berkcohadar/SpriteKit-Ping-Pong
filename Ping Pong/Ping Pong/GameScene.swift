@@ -39,10 +39,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         initLocationP2 = CGPoint(x: (self.size.width/2)/3 * 2.5, y: 0)
         
         
-        player1 = SKShapeNode(circleOfRadius: CGFloat(90))
+        player1 = SKShapeNode(circleOfRadius: CGFloat(120))
         player1.position = initLocationP1
         player1.fillColor = .systemGreen
-        player1.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(90))
+        player1.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(120))
         player1.physicsBody!.affectedByGravity = false
         player1.physicsBody?.isDynamic = false
         player1.physicsBody?.collisionBitMask = 2
@@ -53,10 +53,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player1.physicsBody?.restitution = 1
         player1.name = "player11"
         
-        player2 = SKShapeNode(circleOfRadius: CGFloat(90))
+        player2 = SKShapeNode(circleOfRadius: CGFloat(120))
         player2.position = initLocationP2
         player2.fillColor = .systemPink
-        player2.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(90))
+        player2.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(120))
         player2.physicsBody!.affectedByGravity = false
         player2.physicsBody?.isDynamic = false
         player2.physicsBody?.collisionBitMask = 2
@@ -67,10 +67,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player2.physicsBody?.restitution = 1
         player2.name = "player22"
         
-        gameBall = SKShapeNode(circleOfRadius: CGFloat(30))
+        gameBall = SKShapeNode(circleOfRadius: CGFloat(50))
         gameBall.fillColor = .red
         gameBall.position = initLocationBall
-        gameBall.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(30))
+        gameBall.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(50))
         gameBall.physicsBody!.affectedByGravity = false
         gameBall.physicsBody?.collisionBitMask = 1
         gameBall.physicsBody?.categoryBitMask = 2
@@ -93,37 +93,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         self.addChild(player1)
         self.addChild(player2)
         self.addChild(gameBall)
-        gameBall.physicsBody?.applyImpulse(CGVector(dx: 250, dy: 0))
+        gameBall.physicsBody?.applyImpulse(CGVector(dx: 600, dy: 0))
         
 
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in touches {
-            let loc = touch.location(in: self)
-            if (loc.x < 0) {
-                player1.position.y = loc.y
-            }
-            else {
-                player2.position.y = loc.y
-            }
-            
-        }
-    }
+
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let loc = touch.location(in: self)
             let radius = (self.size.width/2)/3
             if (loc.x < 0) {
                 player1.position.y = loc.y
-                if(loc.x <= radius * -2) {
+                if(loc.x <= radius * -1) {
                     player1.position.x = loc.x
                 }
                 
             }
             else {
                 player2.position.y = loc.y
-                if(loc.x >= radius * 2) {
+                if(loc.x >= radius) {
                     player2.position.x = loc.x
                 }
             }
@@ -143,7 +132,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 if (player2ScoreInt == targetScore){
                     endGame(player: "player2")
                 } else {
-                    timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: nil, repeats: true)
+                    timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: ["player":"player2"], repeats: true)
                 }
             }
             if (gameBall.position.x > initLocationP2.x) {
@@ -154,19 +143,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 if (player1ScoreInt == targetScore){
                     endGame(player: "player1")
                 } else {
-                    timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: nil, repeats: true)
+                    timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: ["player":"player1"], repeats: true)
                 }
             }
         }
     }
     
-    @objc func resetBall(){
+    @objc func resetBall(sender:Timer){
+        guard let players = sender.userInfo as? [String: String] else { return }
+        let player = players["player", default: "Anonymous"]
         time = time - 1
         if (time == 0){
             print("RESET")
             gameBall.position = initLocationBall
             self.addChild(gameBall)
-            gameBall.physicsBody?.applyImpulse(CGVector(dx: 250, dy: 0))
+            if (player == "player1") {
+                gameBall.physicsBody?.applyImpulse(CGVector(dx: 600, dy: 0))
+            } else {
+                gameBall.physicsBody?.applyImpulse(CGVector(dx: -600, dy: 0))
+            }
             
             player1.position = initLocationP1
             player2.position = initLocationP2
