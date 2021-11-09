@@ -28,16 +28,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player1Label = (self.childNode(withName: "player1ScoreLabel") as! SKLabelNode)
         player2Label = (self.childNode(withName: "player2ScoreLabel") as! SKLabelNode)
         
-        gameBall = SKShapeNode(circleOfRadius: CGFloat(20))
+        gameBall = SKShapeNode(circleOfRadius: CGFloat(30))
         gameBall.fillColor = .red
         gameBall.position = initialLocation
-        gameBall.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(20))
+        gameBall.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(30))
         gameBall.physicsBody!.affectedByGravity = false
         gameBall.physicsBody?.collisionBitMask = 1
         gameBall.physicsBody?.categoryBitMask = 2
         gameBall.physicsBody?.angularDamping = 0
         gameBall.physicsBody?.linearDamping = 0
-        gameBall.physicsBody?.friction = 1
+        gameBall.physicsBody?.friction = 0
         gameBall.physicsBody?.restitution = 1
         gameBall.physicsBody?.allowsRotation = true
         gameBall.physicsBody?.isDynamic = true
@@ -50,7 +50,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         self.physicsBody = border
         self.physicsBody?.contactTestBitMask = 2
         
-        gameBall.physicsBody?.applyImpulse(CGVector(dx: 100, dy: 100))
+        gameBall.physicsBody?.applyImpulse(CGVector(dx: 250, dy: 0))
         
         self.physicsWorld.contactDelegate = self
         self.name = "gameArea"
@@ -71,11 +71,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let loc = touch.location(in: self)
+            let radius = (self.size.width/2)/3
             if (loc.x < 0) {
                 player1.position.y = loc.y
+                if(loc.x <= radius * -2) {
+                    player1.position.x = loc.x
+                }
+                
             }
             else {
                 player2.position.y = loc.y
+                if(loc.x >= radius * 2) {
+                    player2.position.x = loc.x
+                }
             }
         }
     }
@@ -110,7 +118,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             gameBall.position = initialLocation
             gameBall.zRotation = CGFloat.pi / 2
             self.addChild(gameBall)
-            gameBall.physicsBody?.applyImpulse(CGVector(dx: 100, dy: 100))
+            gameBall.physicsBody?.applyImpulse(CGVector(dx: 250, dy: 0))
             timer.invalidate()
             time = 2
         }
