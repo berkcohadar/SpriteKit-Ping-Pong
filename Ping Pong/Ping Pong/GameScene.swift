@@ -101,7 +101,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         
         self.addChild(player1)
         self.addChild(player2)
-        self.addChild(gameBall)
+        if ((childNode(withName: "gameball")) == nil){
+            self.addChild(gameBall)
+        }
         gameBall.physicsBody?.applyImpulse(CGVector(dx: 600, dy: 0))
         
     }
@@ -170,7 +172,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         if (time == 0){
             print("RESET")
             gameBall.position = initLocationBall
-            self.addChild(gameBall)
+            if ((childNode(withName: "gameball")) == nil){
+                self.addChild(gameBall)
+            }
+            
             
             if (player == "player1") {
                 gameBall.physicsBody?.applyImpulse(CGVector(dx: 600, dy: 0))
@@ -197,11 +202,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player2Label.text = String(player2ScoreInt)
         
         if (player == "player1"){
-            print("player1 won")
             winnerLabel.position = CGPoint(x: 0, y: 0)
             winnerLabel.text = "player1 won"
         } else if (player == "player2"){
-            print("player2 won")
             winnerLabel.position = CGPoint(x: 0, y: 0)
             winnerLabel.text = "player2 won"
         }
