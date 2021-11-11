@@ -31,8 +31,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     
     var ballHitSound : AVAudioPlayer?
     var paddleHitSound : AVAudioPlayer?
+    var scoreSound : AVAudioPlayer?
+
     var ballHitSoundDir = Bundle.main.path(forResource: "ballHit", ofType: "wav")
     var paddleHitSoundDir = Bundle.main.path(forResource: "paddleHit", ofType: "wav")
+    var scoreSoundDir = Bundle.main.path(forResource: "score", ofType: "wav")
 
     override func didMove(to view: SKView) {
         player1Label = (self.childNode(withName: "player1ScoreLabel") as! SKLabelNode)
@@ -55,7 +58,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player1.physicsBody?.linearDamping = 0
         player1.physicsBody?.friction = 0
         player1.physicsBody?.restitution = 1
-        player1.name = "player11"
+        player1.physicsBody?.contactTestBitMask = 2
+        player1.name = "player1"
         
         player2 = SKShapeNode(circleOfRadius: CGFloat(120))
         player2.position = initLocationP2
@@ -69,7 +73,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player2.physicsBody?.linearDamping = 0
         player2.physicsBody?.friction = 0
         player2.physicsBody?.restitution = 1
-        player2.name = "player22"
+        player2.physicsBody?.contactTestBitMask = 2
+        player2.name = "player2"
         
         gameBall = SKShapeNode(circleOfRadius: CGFloat(50))
         gameBall.fillColor = .red
@@ -122,42 +127,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        // SOUND ANIMATION PLAY
-        do {
-            try AVAudioSession.sharedInstance().setMode(.default)
-            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
-            
-            ballHitSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: self.ballHitSoundDir!))
-            guard let ballHitSound = ballHitSound else {
-                return
-            }
-            ballHitSound.play()
-
-        } catch {
-            print("Error while playing the ball hit sound.")
-        }
-        
-        do {
-            try AVAudioSession.sharedInstance().setMode(.default)
-            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
-            
-            paddleHitSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: self.paddleHitSoundDir!))
-            guard let paddleHitSound = paddleHitSound else {
-                return
-            }
-            paddleHitSound.play()
-
-        } catch {
-            print("Error while playing the paddle hit sound.")
-        }
-        
-        
         let firstContact = contact.bodyA.node?.name
         let secondContact = contact.bodyB.node?.name
-        
+                
+        if ((firstContact == "gameBall" && (secondContact == "player1" || secondContact == "player2")) || ((firstContact == "player1" || firstContact == "player2") && secondContact == "gameBall")) {
+            soundEffect(type: "paddleHit")
+        }
+
         if (firstContact == "gameBall" && secondContact == "gameArea" || firstContact == "gameArea" && secondContact == "gameBall") {
+            soundEffect(type: "ballHit")
+            
             if (gameBall.position.x < initLocationP1.x) {
-                print("GOAL - PLAYER2")
+                soundEffect(type: "scoreSound")
                 gameBall.removeFromParent()
                 player2ScoreInt += 1
                 player2Label.text = String(player2ScoreInt)
@@ -169,7 +150,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             }
             
             if (gameBall.position.x > initLocationP2.x) {
-                print("GOAL - PLAYER1")
+                soundEffect(type: "scoreSound")
                 gameBall.removeFromParent()
                 player1ScoreInt += 1
                 player1Label.text = String(player1ScoreInt)
@@ -223,6 +204,56 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             print("player2 won")
             winnerLabel.position = CGPoint(x: 0, y: 0)
             winnerLabel.text = "player2 won"
+        }
+    }
+    
+    @objc func soundEffect(type:String) {
+        switch type {
+        case "ballHit":
+            do {  // SOUND ANIMATION PLAY
+                try AVAudioSession.sharedInstance().setMode(.default)
+                try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
+                
+                ballHitSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: self.ballHitSoundDir!))
+                guard let ballHitSound = ballHitSound else {
+                    return
+                }
+                ballHitSound.play()
+
+            } catch {
+                print("Error while playing the ball hit sound.")
+            }
+        case "paddleHit":
+            do {
+                try AVAudioSession.sharedInstance().setMode(.default)
+                try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
+                
+                paddleHitSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: self.paddleHitSoundDir!))
+                guard let paddleHitSound = paddleHitSound else {
+                    return
+                }
+                paddleHitSound.play()
+
+            } catch {
+                print("Error while playing the paddle hit sound.")
+            }
+        case "scoreSound":
+            do {
+                try AVAudioSession.sharedInstance().setMode(.default)
+                try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
+                
+                scoreSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: self.scoreSoundDir!))
+                guard let scoreSound = scoreSound else {
+                    return
+                }
+                scoreSound.play()
+
+            } catch {
+                print("Error while playing the paddle hit sound.")
+            }
+        default:
+            print("Sound has no type")
+            break
         }
     }
     

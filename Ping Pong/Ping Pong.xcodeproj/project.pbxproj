@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7A0F5DDA273DA21E008AC79F /* ballHit.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7A0F5DD9273DA21E008AC79F /* ballHit.wav */; };
 		7A0F5DDC273DA2C6008AC79F /* paddleHit.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7A0F5DDB273DA2C6008AC79F /* paddleHit.wav */; };
+		7A0F5DDE273DA75B008AC79F /* score.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7A0F5DDD273DA75B008AC79F /* score.wav */; };
 		7A95C2BD27171EBF009E59B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A95C2BC27171EBF009E59B3 /* AppDelegate.swift */; };
 		7A95C2BF27171EBF009E59B3 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7A95C2BE27171EBF009E59B3 /* GameScene.sks */; };
 		7A95C2C127171EBF009E59B3 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7A95C2C027171EBF009E59B3 /* Actions.sks */; };
@@ -42,6 +43,7 @@
 /* Begin PBXFileReference section */
 		7A0F5DD9273DA21E008AC79F /* ballHit.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = ballHit.wav; path = Sounds/ballHit.wav; sourceTree = "<group>"; };
 		7A0F5DDB273DA2C6008AC79F /* paddleHit.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = paddleHit.wav; path = Sounds/paddleHit.wav; sourceTree = "<group>"; };
+		7A0F5DDD273DA75B008AC79F /* score.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = score.wav; path = Sounds/score.wav; sourceTree = "<group>"; };
 		7A95C2B927171EBF009E59B3 /* Ping Pong.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ping Pong.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A95C2BC27171EBF009E59B3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7A95C2BE27171EBF009E59B3 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 			children = (
 				7A0F5DD9273DA21E008AC79F /* ballHit.wav */,
 				7A0F5DDB273DA2C6008AC79F /* paddleHit.wav */,
+				7A0F5DDD273DA75B008AC79F /* score.wav */,
 				7A95C2BC27171EBF009E59B3 /* AppDelegate.swift */,
 				7A95C2BE27171EBF009E59B3 /* GameScene.sks */,
 				7A95C2C027171EBF009E59B3 /* Actions.sks */,
@@ -242,6 +245,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A95C2C827171EBF009E59B3 /* Main.storyboard in Resources */,
+				7A0F5DDE273DA75B008AC79F /* score.wav in Resources */,
 				7A0F5DDA273DA21E008AC79F /* ballHit.wav in Resources */,
 				7A95C2BF27171EBF009E59B3 /* GameScene.sks in Resources */,
 				7A0F5DDC273DA2C6008AC79F /* paddleHit.wav in Resources */,
