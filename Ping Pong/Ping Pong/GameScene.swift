@@ -7,6 +7,7 @@
 
 import SpriteKit
 import GameplayKit
+import AVFoundation
 
 class GameScene: SKScene, SKPhysicsContactDelegate{
     var player1: SKShapeNode!
@@ -27,6 +28,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     
     var targetScore = 10
     var winnerLabel: SKLabelNode!
+    
+    var ballHitSound : AVAudioPlayer?
+    var paddleHitSound : AVAudioPlayer?
+    var ballHitSoundDir = Bundle.main.path(forResource: "ballHit", ofType: "wav")
+    var paddleHitSoundDir = Bundle.main.path(forResource: "paddleHit", ofType: "wav")
+
     override func didMove(to view: SKView) {
         player1Label = (self.childNode(withName: "player1ScoreLabel") as! SKLabelNode)
         player2Label = (self.childNode(withName: "player2ScoreLabel") as! SKLabelNode)
@@ -91,6 +98,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         self.addChild(player2)
         self.addChild(gameBall)
         gameBall.physicsBody?.applyImpulse(CGVector(dx: 600, dy: 0))
+        
     }
     
 
@@ -114,6 +122,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
+        // SOUND ANIMATION PLAY
+        do {
+            try AVAudioSession.sharedInstance().setMode(.default)
+            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
+            
+            ballHitSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: self.ballHitSoundDir!))
+            guard let ballHitSound = ballHitSound else {
+                return
+            }
+            ballHitSound.play()
+
+        } catch {
+            print("Error while playing the ball hit sound.")
+        }
+        
+        do {
+            try AVAudioSession.sharedInstance().setMode(.default)
+            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
+            
+            paddleHitSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: self.paddleHitSoundDir!))
+            guard let paddleHitSound = paddleHitSound else {
+                return
+            }
+            paddleHitSound.play()
+
+        } catch {
+            print("Error while playing the paddle hit sound.")
+        }
+        
+        
         let firstContact = contact.bodyA.node?.name
         let secondContact = contact.bodyB.node?.name
         
