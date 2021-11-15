@@ -10,6 +10,7 @@
 		7A0F5DDA273DA21E008AC79F /* ballHit.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7A0F5DD9273DA21E008AC79F /* ballHit.wav */; };
 		7A0F5DDC273DA2C6008AC79F /* paddleHit.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7A0F5DDB273DA2C6008AC79F /* paddleHit.wav */; };
 		7A0F5DDE273DA75B008AC79F /* score.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7A0F5DDD273DA75B008AC79F /* score.wav */; };
+		7A7762D22741E51C009C089F /* StartScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7762D12741E51C009C089F /* StartScreenViewController.swift */; };
 		7A95C2BD27171EBF009E59B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A95C2BC27171EBF009E59B3 /* AppDelegate.swift */; };
 		7A95C2BF27171EBF009E59B3 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7A95C2BE27171EBF009E59B3 /* GameScene.sks */; };
 		7A95C2C127171EBF009E59B3 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7A95C2C027171EBF009E59B3 /* Actions.sks */; };
@@ -44,6 +45,7 @@
 		7A0F5DD9273DA21E008AC79F /* ballHit.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = ballHit.wav; path = Sounds/ballHit.wav; sourceTree = "<group>"; };
 		7A0F5DDB273DA2C6008AC79F /* paddleHit.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = paddleHit.wav; path = Sounds/paddleHit.wav; sourceTree = "<group>"; };
 		7A0F5DDD273DA75B008AC79F /* score.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = score.wav; path = Sounds/score.wav; sourceTree = "<group>"; };
+		7A7762D12741E51C009C089F /* StartScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartScreenViewController.swift; sourceTree = "<group>"; };
 		7A95C2B927171EBF009E59B3 /* Ping Pong.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ping Pong.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A95C2BC27171EBF009E59B3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7A95C2BE27171EBF009E59B3 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				7A95C2C627171EBF009E59B3 /* Main.storyboard */,
 				7A95C2C927171EC0009E59B3 /* Assets.xcassets */,
 				7A95C2CB27171EC0009E59B3 /* LaunchScreen.storyboard */,
+				7A7762D12741E51C009C089F /* StartScreenViewController.swift */,
 			);
 			path = "Ping Pong";
 			sourceTree = "<group>";
@@ -279,6 +282,7 @@
 				7A95C2C327171EBF009E59B3 /* GameScene.swift in Sources */,
 				7A95C2C527171EBF009E59B3 /* GameViewController.swift in Sources */,
 				7A95C2BD27171EBF009E59B3 /* AppDelegate.swift in Sources */,
+				7A7762D22741E51C009C089F /* StartScreenViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

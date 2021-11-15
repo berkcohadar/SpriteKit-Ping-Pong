@@ -76,10 +76,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player2.physicsBody?.contactTestBitMask = 2
         player2.name = "player2"
         
-        gameBall = SKShapeNode(circleOfRadius: CGFloat(50))
+        gameBall = SKShapeNode(circleOfRadius: CGFloat(35))
         gameBall.fillColor = .red
         gameBall.position = initLocationBall
-        gameBall.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(50))
+        gameBall.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(35))
         gameBall.physicsBody!.affectedByGravity = false
         gameBall.physicsBody?.collisionBitMask = 1
         gameBall.physicsBody?.categoryBitMask = 2
@@ -104,7 +104,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         if ((childNode(withName: "gameball")) == nil){
             self.addChild(gameBall)
         }
-        gameBall.physicsBody?.applyImpulse(CGVector(dx: 600, dy: 0))
+        gameBall.physicsBody?.applyImpulse(CGVector(dx: 275, dy: 0))
         
     }
     
@@ -136,12 +136,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             soundEffect(type: "paddleHit")
         }
 
-        if (firstContact == "gameBall" && secondContact == "gameArea" || firstContact == "gameArea" && secondContact == "gameBall") {
-            soundEffect(type: "ballHit")
+        else if (firstContact == "gameBall" && secondContact == "gameArea" || firstContact == "gameArea" && secondContact == "gameBall") {
             
             if (gameBall.position.x < initLocationP1.x) {
-                soundEffect(type: "scoreSound")
                 gameBall.removeFromParent()
+                soundEffect(type: "scoreSound")
                 player2ScoreInt += 1
                 player2Label.text = String(player2ScoreInt)
                 if (player2ScoreInt == targetScore){
@@ -151,9 +150,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 }
             }
             
-            if (gameBall.position.x > initLocationP2.x) {
-                soundEffect(type: "scoreSound")
+            else if (gameBall.position.x > initLocationP2.x) {
                 gameBall.removeFromParent()
+                soundEffect(type: "scoreSound")
                 player1ScoreInt += 1
                 player1Label.text = String(player1ScoreInt)
                 if (player1ScoreInt == targetScore){
@@ -161,6 +160,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 } else {
                     timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.resetBall), userInfo: ["player":"player1"], repeats: true)
                 }
+            }
+            
+            else {
+                soundEffect(type: "ballHit")
             }
         }
     }
@@ -170,7 +173,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         let player = players["player", default: "Anonymous"]
         time = time - 1
         if (time == 0){
-            print("RESET")
             gameBall.position = initLocationBall
             if ((childNode(withName: "gameball")) == nil){
                 self.addChild(gameBall)
@@ -178,9 +180,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             
             
             if (player == "player1") {
-                gameBall.physicsBody?.applyImpulse(CGVector(dx: 600, dy: 0))
+                gameBall.physicsBody?.applyImpulse(CGVector(dx: 275, dy: 0))
             } else {
-                gameBall.physicsBody?.applyImpulse(CGVector(dx: -600, dy: 0))
+                gameBall.physicsBody?.applyImpulse(CGVector(dx: -275, dy: 0))
             }
             
             player1.position = initLocationP1
@@ -214,9 +216,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         switch type {
         case "ballHit":
             do {  // SOUND ANIMATION PLAY
-                try AVAudioSession.sharedInstance().setMode(.default)
-                try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
-                
                 ballHitSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: self.ballHitSoundDir!))
                 guard let ballHitSound = ballHitSound else {
                     return
@@ -228,9 +227,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             }
         case "paddleHit":
             do {
-                try AVAudioSession.sharedInstance().setMode(.default)
-                try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
-                
                 paddleHitSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: self.paddleHitSoundDir!))
                 guard let paddleHitSound = paddleHitSound else {
                     return
@@ -242,9 +238,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             }
         case "scoreSound":
             do {
-                try AVAudioSession.sharedInstance().setMode(.default)
-                try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
-                
                 scoreSound = try AVAudioPlayer(contentsOf: URL(fileURLWithPath: self.scoreSoundDir!))
                 guard let scoreSound = scoreSound else {
                     return
