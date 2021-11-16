@@ -15,6 +15,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     var gameBall: SKShapeNode!
     var player1Label: SKLabelNode!
     var player2Label: SKLabelNode!
+    var upgrade: SKShapeNode!
     
     var initLocationBall = CGPoint(x: 0, y: 0)
     var initLocationP1 = CGPoint(x: 0, y: 0)
@@ -26,7 +27,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     var timer = Timer()
     var time = 2
     
-    var targetScore = 10
+    var timer2 = Timer()
+    var time2 = 6
+    
+    var targetScore = 3
     var winnerLabel: SKLabelNode!
     
     var ballHitSound : AVAudioPlayer?
@@ -37,6 +41,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     var paddleHitSoundDir = Bundle.main.path(forResource: "paddleHit", ofType: "wav")
     var scoreSoundDir = Bundle.main.path(forResource: "score", ofType: "wav")
 
+    var ballSpeed = 275
+    
     override func didMove(to view: SKView) {
         player1Label = (self.childNode(withName: "player1ScoreLabel") as! SKLabelNode)
         player2Label = (self.childNode(withName: "player2ScoreLabel") as! SKLabelNode)
@@ -57,7 +63,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player1.physicsBody?.angularDamping = 0
         player1.physicsBody?.linearDamping = 0
         player1.physicsBody?.friction = 0
-        player1.physicsBody?.restitution = 1
+        player1.physicsBody?.restitution = 0
         player1.physicsBody?.contactTestBitMask = 2
         player1.name = "player1"
         
@@ -72,10 +78,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         player2.physicsBody?.angularDamping = 0
         player2.physicsBody?.linearDamping = 0
         player2.physicsBody?.friction = 0
-        player2.physicsBody?.restitution = 1
+        player2.physicsBody?.restitution = 0
         player2.physicsBody?.contactTestBitMask = 2
         player2.name = "player2"
-        
+
         gameBall = SKShapeNode(circleOfRadius: CGFloat(35))
         gameBall.fillColor = .red
         gameBall.position = initLocationBall
@@ -87,7 +93,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         gameBall.physicsBody?.linearDamping = 0
         gameBall.physicsBody?.friction = 0
         gameBall.physicsBody?.restitution = 1
-        gameBall.physicsBody?.allowsRotation = true
+        gameBall.physicsBody?.allowsRotation = false
         gameBall.physicsBody?.isDynamic = true
         gameBall.zRotation = CGFloat.pi / 2
         gameBall.name = "gameBall"
@@ -104,7 +110,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         if ((childNode(withName: "gameball")) == nil){
             self.addChild(gameBall)
         }
-        gameBall.physicsBody?.applyImpulse(CGVector(dx: 275, dy: 0))
+        gameBall.physicsBody?.applyImpulse(CGVector(dx: ballSpeed, dy: 0))
+        
+        timer2 = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(GameScene.generateUpgrade), userInfo: nil, repeats: true)
         
     }
     
@@ -137,7 +145,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         }
 
         else if (firstContact == "gameBall" && secondContact == "gameArea" || firstContact == "gameArea" && secondContact == "gameBall") {
-            
             if (gameBall.position.x < initLocationP1.x) {
                 gameBall.removeFromParent()
                 soundEffect(type: "scoreSound")
@@ -166,6 +173,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 soundEffect(type: "ballHit")
             }
         }
+        else if (firstContact == "gameBall" && secondContact == "upgrade" || firstContact == "upgrade" && secondContact == "gameBall") {
+                upgrade.removeFromParent()
+                gameBall.fillColor = .black
+                ballSpeed = 450
+        }
     }
     
     @objc func resetBall(sender:Timer){
@@ -180,9 +192,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             
             
             if (player == "player1") {
-                gameBall.physicsBody?.applyImpulse(CGVector(dx: 275, dy: 0))
+                gameBall.physicsBody?.applyImpulse(CGVector(dx: ballSpeed, dy: 0))
             } else {
-                gameBall.physicsBody?.applyImpulse(CGVector(dx: -275, dy: 0))
+                gameBall.physicsBody?.applyImpulse(CGVector(dx: -ballSpeed, dy: 0))
             }
             
             player1.position = initLocationP1
@@ -190,6 +202,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
             
             timer.invalidate()
             time = 2
+            
+            ballSpeed = 275
         }
     }
     
@@ -250,6 +264,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         default:
             print("Sound has no type")
             break
+        }
+    }
+    
+    @objc func generateUpgrade(sender:Timer){
+        time2 = time2 - 1
+        if (time2 == 0){
+            if ((childNode(withName: "upgrade")) == nil){
+                upgrade = SKShapeNode(circleOfRadius: CGFloat(100))
+                upgrade.name = "upgrade"
+                
+                upgrade.fillColor = .white
+                upgrade.fillTexture = SKTexture(imageNamed: "bingball")
+                                
+                let randomLocX = Int.random(in: Int(self.frame.minX + 300)...Int(self.frame.maxX - 300))
+                let randomLocY = Int.random(in: Int(self.frame.minY + 160)...Int(self.frame.maxY - 160))
+
+                upgrade.position = CGPoint(x: CGFloat(randomLocX), y: CGFloat(randomLocY))
+                
+                upgrade.physicsBody = SKPhysicsBody(circleOfRadius: CGFloat(10))
+                upgrade.physicsBody?.linearDamping = 0
+                upgrade.physicsBody?.angularDamping = 0
+                upgrade.physicsBody?.affectedByGravity = false
+                upgrade.physicsBody?.restitution = 0
+                
+                upgrade.physicsBody?.categoryBitMask = 1
+                upgrade.physicsBody?.collisionBitMask = 2
+                upgrade.physicsBody?.contactTestBitMask = 2
+                self.addChild(upgrade)
+            }
+            	
+            time2 = 10
         }
     }
     
