@@ -293,7 +293,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
                 upgrade.physicsBody?.contactTestBitMask = 2
                 self.addChild(upgrade)
             }
-            	
             time2 = 10
         }
     }
